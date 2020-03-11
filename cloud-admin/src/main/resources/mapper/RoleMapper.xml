@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.admin.mapper.RoleMapper">
+	<resultMap id="BaseResultMap" type="cn.gov.gzst.admin.entity.Role">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="enabled" property="enabled" jdbcType="TINYINT" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		r.id,
+		r.name,
+		r.code,
+		r.type,
+		r.enabled,
+		r.remarks
+	</sql>
+
+	<sql id="Role_Column_List">
+		sr.id,
+		sr.name,
+		sr.code,
+		sr.type,
+		sr.enabled,
+		sr.remarks
+	</sql>
+
+	<sql id="joins">
+        left join sec_role_authority ra on sr.id = ra.role_id
+        left join sec_authority sa on ra.authority_id = sa.id
+        left join sec_authority_resource ar on sa.id = ar.authority_id
+        left join sec_resource srs on ar.resource_id = srs.id
+	</sql>
+
+	<!-- 通过资源ID查询能访问资源的角色 -->
+	<select id="findListBySourceId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Role_Column_List" />
+		FROM sec_role sr
+		<include refid="joins" />
+		WHERE srs.id= #{sourceId}
+		AND sr.enabled='1'
+	</select>
+
+	<!-- 通过用户ID角色 -->
+	<select id="findRoleByUserId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_role r
+		LEFT JOIN sys_user_role ur on r.id=ur.role_id
+		WHERE ur.user_id= #{userId}
+	</select>
+
+	<!-- 查找角色编码查看用户列表 -->
+	<select id="findRoleCodeUid" resultType="java.lang.String">
+		SELECT
+	    ur.user_id as uid
+		FROM sys_role r
+		LEFT JOIN sys_user_role ur on r.id=ur.role_id
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.cms.mapper.ArticleMapper">
+
+
+    <sql id="Cms_Article_List">
+        a.id,
+        a.cid,
+        a.title,
+        a.color,
+        a.alias,
+        a.keywords,
+        a.description,
+        a.content,
+        a.thumb,
+        a.author,
+        a.source,
+        a.listorder,
+        a.if_show,
+        a.dateline,
+        a.create_by,
+        a.create_date,
+        a.update_by,
+        a.update_date,
+        a.del_flag,
+        a.remarks
+    </sql>
+
+    <select id="selectList" resultType="cn.gov.gzst.cms.entity.Article">
+        select
+        <include refid="Cms_Article_List" />
+        from cms_article a
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="ArticleListBysiteId" resultType="cn.gov.gzst.cms.entity.Article">
+        select
+        <include refid="Cms_Article_List" />
+        from cms_article a
+        where a.cid in ( SELECT id from cms_category <where>
+        ${ew.sqlSegment}
+    </where> )
+
+    </select>
+
+</mapper>

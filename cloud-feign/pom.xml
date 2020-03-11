@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>clouds</artifactId>
+        <groupId>cn.gov.gzst.clouds</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cloud-feign</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>cloud-admin-feign</module>
+        <module>cloud-email-feign</module>
+        <module>cloud-sms-feign</module>
+        <module>cloud-activiti-feign</module>
+        <module>cloud-pms-feign</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.1.4</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

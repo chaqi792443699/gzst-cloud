@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!--继承父工程-->
+    <parent>
+        <groupId>cn.gov.gzst.clouds</groupId>
+        <artifactId>clouds</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>cloud-monitor</artifactId>
+    <groupId>cn.gov.gzst.clouds</groupId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>cloud-service-admin</module>
+        <module>cloud-zipkin-server</module>
+    </modules>
+
+    <!--maven分发构件至远程仓库-->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://maven.gzst.gov.cn/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://maven.gzst.gov.cn/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.admin.mapper.UserMapper" >
+
+	<!-- 查找列表 -->
+	<select id="selectEnterpriseRoleUid" resultType="java.lang.String">
+		select DISTINCT em.uid from sys_enterprise_member em
+		LEFT JOIN sys_user_role ur on ur.user_id = em.uid
+		LEFT JOIN sys_role r on ur.role_id=r.id
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
+  
+</mapper>

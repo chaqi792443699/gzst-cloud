@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.cms.mapper.GuestbookMapper">
+
+
+    <sql id="Cms_Guestbook_List">
+        g.id,
+        u.show_name as username,
+        g.title,
+        g.status,
+        g.dateline,
+        g.author,
+        g.telephone,
+        g.email,
+        g.content,
+        g.ip,
+        g.site_id
+    </sql>
+
+    <select id="selectList" resultType="cn.gov.gzst.cms.entity.Guestbook">
+        select
+        <include refid="Cms_Guestbook_List" />
+        from cms_guestbook g LEFT JOIN sys_user u on u.id = g.uid
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

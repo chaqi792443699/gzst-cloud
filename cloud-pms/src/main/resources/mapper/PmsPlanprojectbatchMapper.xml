@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.pms.mapper.PmsPlanprojectbatchMapper">
+
+    <select id="getAn" resultType="cn.gov.gzst.pms.entity.PmsPlanprojectbatch">
+      select DISTINCT annually FROM PMS_PLANPROJECTBATCH ORDER BY annually
+    </select>
+
+</mapper>

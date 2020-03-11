@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.PgzxEvalformMapper">
+
+    <select id="userFindContructList" parameterType="java.lang.String" resultType="java.util.Map">
+              SELECT   pb.pactno,ppb.id,ppb.projectbasename, ppb.mainorganizers,ppb.projectleader, ppb.pactid	,pcr.APPROVAL,pcr.APPROVAL_TIME,APPROVAL_OPINION
+              from  pact_base   pb
+			  LEFT JOIN pact_projectbase ppb on pb.id = ppb.pactid
+			  LEFT JOIN PGZX_CWPG_PROCESS pcr on  pcr.pactid = pb.id
+			  <where>
+                  pcr.APPROVAL_TIME in (select max(APPROVAL_TIME) from PGZX_CWPG_PROCESS group by pactid) or pcr.APPROVAL_TIME is null
+                  ${ew.sqlSegment}
+              </where>
+    </select>
+    <select id="Findbase" parameterType="string" resultType="java.util.Map">
+         select *
+			<!--pb.pactno as pactno,ppb.id,ppb.pactid , ppb.projectstartdate,ppb.projectenddate,
+			ppb.projectbasename,ppb.projectleader,ppb.mainorganizers,ppb.projectleaderphone,ppb.ssjsly,
+            instrumentsumkjt,materialexpensekjt,proceedingschargeskjt,fuelandpowerkjt,adminstrativeservicesumkjt,
+            servicefeekjt,adviceforexpertsumkjt,qitakjt,totaljjsumkjt,clhygjhzkjt,dfbk,jhxtzzc,jhxtzkjjf,jhtzze,
+            jrc.PACTID as pact3,
+            jrc.PACTNO as pactno3,
+            jrc.id as id3,
+            peg.MANAGEDEPARTMENT,
+            pe.*,
+            gnhxqk,sjhxqk,slfmzl,slsyxxzl,slwgsjzl,sqfmzl,
+            sqsyxxzl,sqwgsjzl,sqzwxpz,djzwxpz,pygjzcys,pyzjzcys,yjxgy,yjxcl,reportsid,
+            sndxzjyrs-->
+            from  pact_projectbase ppb
+            LEFT JOIN pact_base pb on ppb.pactid = pb.id
+            LEFT JOIN pact_enterpriseorganization peg on pb.ID = peg.PACTID
+            LEFT JOIN PACT_PROJECTEXPENSE pe on peg.PACTID = pe.PACTID
+            LEFT JOIN pact_projectexpense ppe on ppe.pactid = ppb.pactid
+            LEFT JOIN REPORTS_CONTENT jrc on jrc.pactid = ppb.id
+            LEFT JOIN REPORTS_PROJECTSCIENCE jr on jr.reportsid = jrc.id
+            WHERE ppb.pactid = #{pactid} and peg.ISMAINENTERPRISE = 'true'
+    </select>
+
+    <select id="Findevalform" parameterType="string" resultType="java.util.Map">
+
+        SELECT  * from PGZX_EVALFORM WHERE pactid = #{pactid}
+    </select>
+
+    <select id="Findsfromres" parameterType="string" resultType="java.util.Map">
+            <!--select
+            s1.name as class1 ,
+            s2.name as class2,
+            s2.score as secondscore,
+            s3.name as class3,
+            s3.score as thirdscore,
+            s3.id as third_id,
+            s3.content,
+            s3.strdant,
+            s3.grade as thirdgrade,
+            s3.id as selfid
+            from PGZX_SFROMSTR  s1 LEFT JOIN PGZX_SFROMSTR  s2 on s1.id = s2.parentid
+            LEFT JOIN PGZX_SFROMSTR  s3 on s2.id = s3.parentid
+			LEFT JOIN PGZX_SFROMRES ps on ps.id = s3.id
+			WHERE pactid = #{pactid}-->
+        select sf.id,sf.name,sf.score,sf.content,sf.strdant,sf.parentid,ss.id sid,ss.pactid,ss.thirdclassid,ss.grade,ss.filltime
+        from PGZX_SFROMSTR sf
+        left join PGZX_SFROMRES ss on sf.id =ss.THIRDCLASSID and ss.PACTID = #{pactid}
+        where parentid in (select id from PGZX_SFROMSTR where parentid in (select id from PGZX_SFROMSTR where parentid = '0'))
+
+    </select>
+
+
+
+</mapper>

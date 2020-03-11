@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.cms.mapper.SiteRoleUserMapper">
+
+    <select id="selectList" resultType="cn.gov.gzst.cms.entity.SiteRoleUser">
+        SELECT DISTINCT site_id,user_id,(select show_name from sys_user su where csru.user_id = su.id ) as username
+        from cms_site_role_user csru
+        <where>
+          ${ew.sqlSegment}
+        </where>
+    </select>
+    <select id="getRoles" resultType="java.util.Map">
+        SELECT role_id,(select name from sys_role sr where csru.role_id = sr.id ) as rolename
+        from cms_site_role_user csru
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <delete id="deleteBySiteAndUser">
+        DELETE  from cms_site_role_user
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </delete>
+
+</mapper>

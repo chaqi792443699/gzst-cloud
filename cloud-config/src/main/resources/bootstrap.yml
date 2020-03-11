@@ -1,0 +1,40 @@
+server:
+  port: 1089
+
+spring:
+  application:
+    name: cloud-config-server
+  profiles:
+#    active: subversion
+    active: native
+  cloud:
+    config:
+      server:
+        svn:
+          uri: http://svn.gzst.gov.cn/IN_REPOSITORY/DEVELOP/skjt_cloud/gzst-cloud/cloud-config-data/
+          username: jianliaoliang
+          password: Jll_2018
+          default-label: config-repo
+        native:
+          search-locations: classpath:/properties/
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+#关闭安全验证
+management:
+  security:
+     enabled: false
+
+#注册中心配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    #ip-address: 192.168.10.56
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka

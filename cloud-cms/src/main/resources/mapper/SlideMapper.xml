@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.cms.mapper.SlideMapper">
+
+
+    <sql id="Cms_Slide_List">
+        s.id,
+        s.title,
+        s.description,
+        s.tag,
+        s.status,
+        s.create_by,
+        s.create_date,
+        s.update_by,
+        s.update_date,
+        s.del_flag,
+        s.remarks,
+        s.site_id as siteId
+    </sql>
+
+    <select id="selectList" resultType="cn.gov.gzst.cms.entity.Slide">
+        select
+        <include refid="Cms_Slide_List" />
+        from cms_slide s
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

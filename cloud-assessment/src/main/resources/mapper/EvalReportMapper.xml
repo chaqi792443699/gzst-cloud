@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.EvalReportMapper">
+
+
+
+
+    <select id="findByPactno" resultType="map">
+        SELECT ppb.projectstartdate as ppbstr , ppb.projectenddate as ppbend, ppb.projectbasename as ppbpname,ppb.projectleader as ppbled,
+                ppb.techdomain as ppbtech, ppb.casemanagement as ppbment, ppb.pactid as ppbaid, ppb.projectleaderphone as ppdledpho,
+                ex.totalsum as extolsum, ex.selfsum as exselsum , ex.applyprovicegvosum as exapgov, ex.applycitysum as excitysum,
+                ex.instrumentsum as exinstru , ex.materialexpense as exmateria , ex.proceedingscharges as exprocee, ex.fuelandpower as exfule,
+                ex.coferemce as exconf,ex.coorperationresearchsum as excoor,ex.adminstrativeservicesum as expub, ex.servicefee as exlabor,
+                ex.adviceforexpertsum as exadvice, ex.businesstripsum as exbussniss , ex.totaljjsum as extoljj , ex.clhygjhz as exclhy,
+                jr.id, jr.gjhxqk, jr.gnhxqk, jr.sjhxqk, jr.gjybqk, jr.gnybqk, jr.sjybqk, jr.zz, jr.slfmzl, jr.slsyxxzl, jr.slwgsjzl, jr.slpctzl,
+                jr.sqfmzl, jr.sqsyxxzl, jr.sqwgsjzl, jr.sqpctzl,  jr.sqrjzzq,  jr.sqjcdlbusj,  jr.sqzwxpz,  jr.djrjzzq,  jr.djjcdlbusj, jr.djzwxpz,
+                jr.qtgjbz, jr.qthybz,  jr.qtdfbz,  jr.qtqybz,  jr.cygjbz,  jr.cyhybz,  jr.cydfbz,
+                jr.cyqybz, jr.zsx, jr.scx, jr.pygjzcys,  jr.pyzjzcys,  jr.yjgjzcys, jr.yjxpz,
+                jr.yjxjs, jr.yjxgy, jr.yjxcl, jr.zcpt,  jr.syjd,  jr.sfd,  jr.pactid,  jr.xzjy, jr.jjxycz, jr.jjxyss, jr.jjxylr,  jr.reportsid,  jr.createdate,
+                jr.dwrs,  jr.gjzc,  jr.zjzc, jr.bs,  jr.ss,  jr.bk,  jr.dz,   jr.xzss, jr.xzckch, jr.jhjftrhj, jr.jhsjczkjjf,  jr.jhqtczkjjf,  jr.jhjrjgdk,  jr.jhdwzc,
+                jr.sjjftrhj, jr.sjsjczkjjf,  jr.sjqtczkjjf, jr.sjhdtstze, jr.sjhdfxtze, jr.sjjrjgdke,  jr.sjdwzc, jr.cgzrhts, jr.cgzrhte,
+                jr.sjyycgs, jr.yhjjxy,  jr.xzjyrs, jr.kfts, jr.jdrs, jr.shxysm, jr.jjxysm, jr.stxysm, jr.kcxyx,  jr.shgzfwmyd, jr.lunwenqikan,
+                jr.zhuanliqikuang, jr.jxname, jr.sndxzckch, jr.sndxzjyrs,
+                jr.sndkfts, jr.sndjdrs, jr.sndjjxylr,  jr.sndjjxycz, jr.sndjjxyss, jr.sndyjxjs, jr.sndzcpt, jr.sndxzss,  jr.sndjjxylr1,
+                jr.sndzjxylr,  jr.zjxylr,  jr.sndxssr,  jr.sndrdtr,  jr.xzxssr,jr.xzrdtr,
+                orgnz.organizationname , jrc.pactno,jrc.id
+        from jxpg_reportcontent jrc LEFT JOIN jxpg_report jr on jrc.id = jr.reportsid
+        left join  pact_projectexpense ex on jrc.pactid = ex.pactid left join pact_projectbase ppb on ex.pactid = ppb.pactid
+        LEFT JOIN pact_enterpriseorganization orgnz on ppb.pactid = orgnz.pactid
+        WHERE PACTNO = #{pacdno}  ORDER BY createdate desc LIMIT 1
+    </select>
+
+    <select id="findByPactnoKj" resultType="hashmap">
+        SELECT
+            jrc.PACTNO, jrc.ID, jrc.PACTID, jr.id, jr.projectbaseid,
+            jr.gnhxqk, jr.sjhxqk, jr.slfmzl, jr.slsyxxzl, jr.slwgsjzl,
+            jr.sqfmzl, jr.sqsyxxzl, jr.sqwgsjzl, jr.sqzwxpz, jr.djzwxpz,
+            jr.pygjzcys, jr.pyzjzcys, jr.yjxpz, jr.yjxjs, jr.yjxgy, jr.yjxcl,
+            jr.zcpt, jr.pactid, jr.jjxycz, jr.jjxyss, jr.jjxylr,jr.reportsid, jr.createdate,
+            jr.xzckch, jr.xzjyrs,  jr.sndzjxylr, jr.xzxssr, jr.xzrdtr
+        from jxpg_reportcontent jrc LEFT JOIN jxpg_report jr on jrc.id = jr.reportsid
+        WHERE PACTNO = #{pacdno}  ORDER BY createdate desc LIMIT 1
+    </select>
+
+</mapper>

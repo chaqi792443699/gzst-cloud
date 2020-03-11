@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.PgzxSfromstrMapper">
+
+    <select id="findStructure" resultType="java.util.Map">
+         select
+            s1.name as class1 ,
+            s2.name as class2,
+            s2.score as secondscore,
+            s3.name as class3,
+            s3.score as thirdscore,
+            s3.id as third_id,
+            s3.content,
+            s3.strdant,
+            s3.grade as thirdgrade,
+             s3.id as selfid
+            from PGZX_SFROMSTR  s1 LEFT JOIN PGZX_SFROMSTR  s2 on s1.id = s2.parentid
+            LEFT JOIN PGZX_SFROMSTR  s3 on s2.id = s3.parentid WHERE s1.parentid =0
+    </select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.FinanceConclusionMapper">
+        <select id="selectConclusionList" resultType="java.util.Map">
+            select c.id, c.prepared_id, c.review_id, c.review_opinion, c.create_time, c.opinion_time, c.review_time, c.project_id, c.basic_situation, c.conclusion_status,p.sort, p.problem_content, p.opinion
+             from PGZX_CWPG_CONCLUSION c
+             LEFT JOIN PGZX_CWPG_PROBLEM  p on c.PROJECT_ID=p.PROJECT_ID
+             <where>
+                 ${ew.sqlSegment}
+             </where>
+              order by p.sort
+        </select>
+
+        <insert id="conclusionSave" parameterType="cn.gov.gzst.assessment.entity.FinanceConclusion">
+              insert into PGZX_CWPG_CONCLUSION(id, prepared_id, review_id, review_opinion, create_time, opinion_time, review_time, project_id, basic_situation, conclusion_status)  value (#{id},#{preparedId},#{reviewId},#{reviewOpinion},#{createTime},#{opinionTime},#{reviewTime},#{projectId},#{basicSituation},#{conclusionStatus})
+        </insert>
+
+        <select id="selectConclusionByProjectId" resultType="cn.gov.gzst.assessment.entity.FinanceConclusion" parameterType="String">
+            select id, prepared_id, review_id, review_opinion, create_time, opinion_time, review_time, project_id, basic_situation, conclusion_status
+             from PGZX_CWPG_CONCLUSION
+             where PROJECT_ID = #{projectId}
+        </select>
+
+
+        <update id="conclusionUp" parameterType="cn.gov.gzst.assessment.entity.FinanceConclusion">
+            update PGZX_CWPG_CONCLUSION set BASIC_SITUATION = #{basicSituation},REVIEW_OPINION = #{reviewOpinion} where ID = #{id}
+        </update>
+</mapper>

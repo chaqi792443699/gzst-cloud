@@ -1,0 +1,38 @@
+server:
+    port: 7000
+
+#spring
+spring:
+  devtools:
+    restart:
+      enabled: true        #这里是为了热部署的，与mybatis是无关的
+  thymeleaf: #关闭默认模板引擎
+    cache: false
+    enabled: false
+  sms:
+    huyi:
+      api_id: C34514978
+      api_key: 8815ef0b4173558707b68b002d3e0c44
+  mail:
+    host: smtp.exmail.qq.com
+    username: jeeweb@jeeweb.cn
+    password: Jeeweb123456
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  boot:
+    admin:
+      notify:
+        mail:
+          from: jeeweb@jeeweb.cn
+          to: 502079461@qq.com
+        sms:
+          to: 15085980308
+
+management:
+     security:
+        enabled: false

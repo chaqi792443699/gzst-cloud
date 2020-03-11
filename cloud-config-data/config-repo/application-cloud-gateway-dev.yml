@@ -1,0 +1,103 @@
+server:
+  port: 9002
+
+#spring
+spring:
+  session:
+    store-type: none
+  cloud:
+    loadbalancer:
+      retry:
+       enabled: true  #启动负载均衡的重试机制，默认false
+  devtools:
+    restart:
+      enabled: true   #这里是为了热部署的，与mybatis是无关的
+  redis:   #redis 配置
+    host: localhost
+    port: 6379
+    password:
+    pool:
+      max-active: 8
+      max-idle: 8
+      min-idle: 0
+      max-wait: 10000
+  zipkin:
+    base-url: http://localhost:7001
+  sleuth:
+    sampler:
+      percentage: 1.0
+  messages: #国际化
+      basename: i18n/messages,i18n/ValidationMessages
+  thymeleaf: #关闭默认模板引擎
+    cache: false
+    enabled: false
+  aop:  #使用CGLIB来实现AOP的时候
+     proxy-target-class: true
+
+ #DATABASE CONFIG
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.10.70:3306/gzkj_cloud?useUnicode=true&characterEncoding=UTF-8
+    type: com.alibaba.druid.pool.DruidDataSource   #这里是配置druid连接池，以下都是druid的配置信息
+    filters: stat,wall,log4j
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    connection-properties: druid.stat.merggSql=ture;druid.stat.slowSqlMillis=5000
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: cn.gzst.gov.cloud.gateway.entity
+  #typeEnumsPackage: com.baomidou.springboot.entity.enums
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 3
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    # SQL 解析缓存，开启后多租户 @SqlParser 注解生效
+    sql-parser-cache: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+ribbon:
+  ReadTimeout: 100000 #请求处理的超时时间
+  ConnectTimeout: 100000 #ribbon请求连接的超时时间
+  MaxAutoRetries: 3 #对当前服务的重试次数（第一次分配给9082的时候，如果404，则再重试MaxAutoRetries次，如果还是404，则切换到其他服务MaxAutoRetriesNextServer决定）
+  OkToRetryOnAllOperations: true #对所有请求操作都进行重试
+  MaxAutoRetriesNextServer: 1 #切换服务的次数(比如本次请求分配给9082处理，发现404，则切换分配给9081处理，如果还是404，则返回404给客户端）
+  eager-load: #Ribbon的饥饿加载
+    enabled: true
+    clients: cloud-sso-server,cloud-admin,cloud-email,cloud-spring-oss,cloud-sms,cloud-front-cms
+
+zuul:
+  max:
+    host:
+      connections: 500
+  ignored-services: '*'
+  host:
+     connect-timeout-millis: 100000
+     socket-timeout-millis: 100000
+  retryable: true #是否开启重试功能

@@ -1,0 +1,43 @@
+server:
+    port: 9001
+
+#spring
+spring:
+  session:
+     store-type: none
+  devtools:
+    restart:
+      enabled: true        #这里是为了热部署的，与mybatis是无关的
+  redis:   #redis 配置
+        host: localhost
+        port: 6379
+        password:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 10000
+  messages: #国际化
+      basename: i18n/messages,i18n/ValidationMessages
+  thymeleaf: #关闭默认模板引擎
+    cache: false
+    enabled: false
+  zipkin:
+    base-url: http://localhost:7001
+  sleuth:
+    sampler:
+      percentage: 1.0
+
+#shir
+#shiro
+cloud:
+  shiro:
+    login-url: http://192.168.10.53:9527/oauth/index.html#/index
+    pms-login-url: http://localhost:8080/pms/login.do
+    service-center-app-id: HLMBV3OEK
+    service-center-app-secret: ZIAVR5AKFQTKVTMPQ4Z2
+    redirect-Url: http://192.168.10.53:9527/oauth/index.html#/callback
+
+management:
+     security:
+        enabled: false

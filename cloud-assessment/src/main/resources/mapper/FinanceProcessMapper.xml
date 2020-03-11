@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.FinanceProcessMapper">
+            <select id="selectProcessById" resultType="cn.gov.gzst.assessment.entity.FinanceProcess" parameterType="String">
+               select id, project_id, approval, approval_time, approval_id, approval_opinion
+               from PGZX_CWPG_PROCESS
+               where PROJECT_ID = #{projectId} order by APPROVAL_TIME desc
+            </select>
+
+            <select id="selectProcessByProjectId" resultType="cn.gov.gzst.assessment.entity.FinanceProcess">
+               	select *
+               	from PGZX_CWPG_PROCESS
+               	where APPROVAL_TIME =(select max(APPROVAL_TIME) from PGZX_CWPG_PROCESS where PROJECT_ID is not null and PROJECT_ID =#{projectId})
+            </select>
+</mapper>

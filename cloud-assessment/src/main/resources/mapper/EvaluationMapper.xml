@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.EvaluationMapper">
+
+
+    <select id="findById" parameterType="string" resultType="cn.gov.gzst.assessment.entity.Evaluation">
+        SELECT *
+         FROM jxpg_evaluation
+          WHERE id = #{id}
+    </select>
+
+
+    <select id="getReportBaseInfo" parameterType="string" resultType="java.util.Map">
+        select
+            pb.pactno as pactno1,ppb.pactid as p1,pb.project_id, projectstartdate,projectenddate,projectbasename,projectleader,mainorganizers,projectleaderphone,ssjsly,
+            instrumentsumkjt,materialexpensekjt,proceedingschargeskjt,fuelandpowerkjt,adminstrativeservicesumkjt,
+            servicefeekjt,adviceforexpertsumkjt,qitakjt,totaljjsumkjt,clhygjhzkjt,dfbk,jhxtzzc,jhxtzkjjf,jhtzze,
+            jrc.PACTID as pact3,
+            jrc.PACTNO as pactno3,
+            jrc.id as id3,
+            gnhxqk,sjhxqk,slfmzl,slsyxxzl,slwgsjzl,sqfmzl,
+            sqsyxxzl,sqwgsjzl,sqzwxpz,djzwxpz,pygjzcys,pyzjzcys,yjxgy,yjxcl,reportsid,
+            sndxzjyrs
+            from  pact_projectbase ppb
+            LEFT JOIN pact_base pb on ppb.pactid = pb.id
+            LEFT JOIN pact_projectexpense ppe on ppe.pactid = ppb.pactid
+            LEFT JOIN jxpg_reportcontent jrc on jrc.pactid = ppb.id
+            LEFT JOIN jxpg_report jr on jr.reportsid = jr.id
+            where ppb.pactid = #{pactid}
+    </select>
+
+
+    <select id="getEvalInfo" parameterType="string" resultType="java.util.Map">
+
+        select
+        id as evalid,
+        pactid,
+        imp_total as impTotal,
+        impself_raised as impselfRaised,
+        impoffi_appro as impoffiAppro,
+        impcounty_found as impcountyFound,
+        equip_actexpend  as equipActexpend,
+        material_actexpend as  materialActexpend,
+        tprocessing_actexpend as tprocessingActexpend,
+        fuel_actexpend as fuelActexpend,
+        meeting_actexpend as meetingActexpend,
+        publish_actexpend as publishActexpend,
+        labour_actexpend as labourActexpend,
+        expconsult_actexpend as expconsultActexpend,
+        other_actexpend as otherActexpend,
+        indircost_actexpend as indircostActexpend,
+        htys_total as htysTotal,
+        actfound_total as actfoundTotal,
+        equip_adjdesc as equipAdjdesc,
+        material_adjdesc as materialAdjdesc,
+        tprocessing_adjdesc as tprocessingAdjdesc,
+        fuel_adjdesc as fuelAdjdesc,
+        meeting_adjdesc as meetingAdjdesc,
+        publish_adjdesc as publishAdjdesc,
+        labour_adjdesc as labourAdjdesc,
+        expconsult_adjdesc as expconsultAdjdesc,
+        other_adjdesc as otherAdjdesc,
+        indirectcost_adjdesc as indirectcostAdjdesc,
+        is_establishment as isEstablishment,
+        psenior_title as pseniorTitle,
+        pintermediate_title as pintermediateTitle,
+        participant_doctor as participantDoctor,
+        participant_master as participantMaster,
+        participant_leader as participantLeader,
+        participant_overstu as participantOverstu,
+        project_progress as projectProgress,
+        delay_reason as delayReason,
+        softapply_number as softapplyNumber,
+        softauthorize_number as softauthorizeNumber,
+        public_pnumber as publicPnumber,
+        public_inumber as publicInumber,
+        prize_city as prizeCity,
+        prize_other as prizeOther,
+        zdgjbz,
+        industry_standard as industryStandard,
+        enterprise_standard as enterpriseStandard,
+        foreign_standard as foreignStandard,
+        publiciwork_number as publiciworkNumber,
+        publicdwork_number as publicdworkNumber,
+        trtransfer_number as trtransferNumber,
+        trtransfer_found as trtransferFound,
+        service_platform as servicePlatform,
+        project_training as projectTraining,
+        promotion_area as promotionArea,
+        newsb,newscx, newzsx, newsfpxjd,  newsyjd,  newjsze,   newche,  newlrze,   newxssr,  newcz,
+        other_reasondesc as otherReasondesc,  submitdate, status
+
+
+         from jxpg_evaluation
+        where pactid = #{pactid}
+    </select>
+
+
+
+
+
+</mapper>

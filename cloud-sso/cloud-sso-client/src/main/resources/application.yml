@@ -1,0 +1,46 @@
+server:
+    port: 9100
+
+#spring
+spring:
+  application:
+    name: cloud-sso-client
+  session:
+     store-type: none
+  devtools:
+    restart:
+      enabled: true        #这里是为了热部署的，与mybatis是无关的
+  thymeleaf: #关闭默认模板引擎
+    cache: false
+    enabled: false
+
+#eureka服务
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka
+
+#shiro
+cloud:
+  shiro:
+    oauth2:
+       clientId: cloud-admin     #客户端的客户端ID
+       clientSecret: cloud-admin     #客户端的客户端密钥
+       authorizeUrl: http://localhost:9002/sso/oauth2/authorize     #获取授权
+       accessTokenUrl: http://localhost:9002/sso/oauth2/access_token     #获取授权
+       refreshTokenUrl: http://localhost:9002/sso/oauth2/refresh_token   #Token过期刷新授权
+       userInfoUrl: http://localhost:9002/sso/oauth2/user     #获得用户信息接口
+       syncLogin: true #是否同步登陆,同步退出
+       registerLoginUrl: http://localhost:9002/sso/oauth2/register_login  #单点登录需要注册登录状态
+       forceRefreshUrl: http://localhost:9002/sso/oauth2/force_refresh   #强制刷新登陆状态
+       logoutUrl: http://localhost:9002/sso/oauth2/logout     #单点退出
+       redirectSuccessUrl: http://localhost:9100/    #认证成功回掉
+       redirectFailUrl: http://localhost:9100/    #认证失败回掉
+
+management:
+     security:
+        enabled: false

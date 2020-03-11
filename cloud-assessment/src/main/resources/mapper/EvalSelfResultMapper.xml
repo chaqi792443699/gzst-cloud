@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.EvalSelfResultMapper">
+
+
+    <select id="userFindList" parameterType="string" resultType="java.util.Map">
+        SELECT    pactno ,   projectbasename,mainorganizers,ep.state,ppb.pactid,
+       ep.operator,ep.opinion,operate_time
+        from  pact_base  as pb LEFT JOIN pact_projectbase ppb
+        on pb.id = ppb.pactid LEFT JOIN eval_processlast ep on ppb.pactid = ep.pactid
+        where declarantid =#{userid}
+				group by ppb.pactid
+
+    </select>
+
+
+
+    <select id="userFindDetail" parameterType="string" resultType="java.util.Map">
+        select
+        s1.name as class1 ,
+        s2.name as class2,
+        s2.score as secondscore,
+        s3.name as class3,
+        s3.score as thirdscore,
+        sfr.thirdclassid as third_id,
+        s3.content,
+        s3.strdant,
+        sfr.grade,
+        sfr.id as selfid
+        from jxpg_self as s1 LEFT JOIN jxpg_self as s2 on s1.id = s2.parentid
+        LEFT JOIN jxpg_self as s3 on s2.id = s3.parentid
+        LEFT JOIN jxpg_selfresult as sfr on s3.id = sfr.thirdclassid
+        WHERE pactid = #{pactid}
+    </select>
+
+
+    <select id="adminFindListDone" resultType="java.util.Map">
+        		 SELECT DISTINCT  pactno , ppb.pactid,   projectbasename,mainorganizers,projectleader
+                 from  pact_base  as pb LEFT JOIN pact_projectbase ppb
+                 on pb.id = ppb.pactid
+                  LEFT JOIN eval_process ep on ppb.pactid = ep.pactid
+                  WHERE  ischeck = "1"
+    </select>
+
+    <select id="adminFindListTodo" resultType="java.util.Map">
+        SELECT   pactno , ppb.pactid,   projectbasename,mainorganizers,projectleader,operate_time,ep.id
+        from  pact_base  as pb LEFT JOIN pact_projectbase ppb
+        on pb.id = ppb.pactid
+        LEFT JOIN eval_processlast ep on ppb.pactid = ep.pactid
+        WHERE  ischeck = "0" and state = 2
+    </select>
+
+    <select id="adminFindListtodoone" resultType="cn.gov.gzst.assessment.entity.EvalProcesslast">
+        SELECT id,operate_time,pactid,ischeck from eval_processlast   WHERE  ischeck = "0" and state = 2
+    </select>
+
+    <select id="adminFindListoDoneone" resultType="cn.gov.gzst.assessment.entity.EvalProcesslast">
+        SELECT * from eval_processlast   WHERE  ischeck = "1"
+    </select>
+
+
+
+</mapper>

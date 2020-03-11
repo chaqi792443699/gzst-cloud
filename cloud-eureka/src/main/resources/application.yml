@@ -1,0 +1,25 @@
+server:
+  port: 1088
+
+spring:
+  application:
+    name: cloud-eureka-server
+
+security:
+  basic:
+    enabled: true # 启用身份认证
+  user:
+    name: cloud # 定义用户名
+    password: cloud123456 # 定义密码
+
+eureka:
+  client:
+    fetch-registry: false  # 由于注册中心的职责就是维护服务实例，他并不需要去检索服务，所以也设置为false
+    register-with-eureka: false     #  由于该应用为注册中心，所以设置为false，代表不向注册中心注册自己
+    serviceUrl:
+          defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  instance:
+    hostname: localhost
+  server:  #配置属性，但由于 Eureka 自我保护模式以及心跳周期长的原因，经常会遇到 Eureka Server 不剔除已关停的节点的问题
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000

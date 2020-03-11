@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gov.gzst.cms.mapper.SiteMapper">
+
+
+    <sql id="Cms_Site_List">
+        s.id,
+        s.name,
+        s.tag,
+        s.domain,
+        s.seo_title,
+        s.seo_keywords,
+        s.seo_description,
+        (select show_name from sys_user su where su.id = s.user_id ) as username
+    </sql>
+
+    <select id="selectList" resultType="cn.gov.gzst.cms.entity.Site">
+        select
+        <include refid="Cms_Site_List" />
+        from cms_site s
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

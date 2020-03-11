@@ -1,0 +1,36 @@
+server:
+  port: 1089
+
+spring:
+  application:
+    name: cloud-config-server
+  profiles:
+    active: subversion
+  cloud:
+    config:
+      server:
+        svn:
+          uri: https://222.85.151.247:8443/svn/IN_REPOSITORY/DEVELOP/skjt_cloud/cloud/trunk/cloud-config-data/
+          username: wangcunjian
+          password: wangcunjian
+          default-label: config-repo
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+#关闭安全验证
+management:
+  security:
+     enabled: false
+
+#注册中心配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka

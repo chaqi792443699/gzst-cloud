@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.PactProjectbaseMapper">
+
+    <sql id="getPactPro">
+        ppb.id as id,
+        pb.pactno as pactno,
+        ppb.projectbasename as projectbasename,
+        ppb.projectstartdate as projectstartdate,
+        ppb.projectenddate as projectenddate,
+        pe.jhxtzkjjf as jhxtzkjjf,
+        pb.pactstatus as pactStatus,
+        ppb.batchname as batchname,
+        ppb.belonglab as belonglab,
+        ppb.projectleaderphone as projectleaderphone,
+        peg.organizationname as organizationname,
+        ppb.projectleader as projectleader,
+        pppb.annually as annually,
+        pppb.applicationtypecode1 as applicationtypecode1,
+        ppb.projectplantype as projectplantype,
+        ppb.projectplantypecode as projectplantypecode,
+        CASE ps.status
+				when 1 then '1'
+				when 2 then '2'
+				ELSE '3'
+				end as status
+    </sql>
+    <select id="selectPactPro" resultType="cn.gov.gzst.assessment.entity.PactProjectbase">
+        SELECT
+        <include refid="getPactPro"/>
+        FROM pact_projectbase ppb
+        LEFT JOIN pms_department pdp on pdp.id = ppb.belonglabid
+        LEFT JOIN pms_planprojectbatch pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN pact_base pb on pb.id = ppb.pactid
+        LEFT JOIN PACT_STATUS ps on pb.id = ps.pactid
+        LEFT JOIN pact_enterpriseorganization peg on peg.projectbaseid = ppb.id and peg.ismainenterprise='true'
+        LEFT JOIN pact_projectexpense pe on pe.projectbaseid=ppb.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <!--项目合同批量导出-->
+    <select id="exportProjectPact" resultType="cn.gov.gzst.assessment.entity.PactProjectbase">
+        SELECT
+        <include refid="getPactPro"/>
+        FROM PACT_PROJECTBASE ppb
+        LEFT JOIN PMS_DEPARTMENT pdp on pdp.id = ppb.belonglabid
+        LEFT JOIN PMS_PLANPROJECTBATCH pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN PACT_BASE pb on pb.id = ppb.pactid
+        LEFT JOIN PACT_STATUS ps on pb.id = ps.pactid
+        LEFT JOIN PACT_ENTERPRISEORGANIZATION peg on peg.projectbaseid = ppb.id and peg.ismainenterprise='true'
+        LEFT JOIN PACT_PROJECTEXPENSE pe on pe.projectbaseid=ppb.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+
+    <select id="selectCount" resultType="Integer">
+        SELECT count(*) as count
+        FROM pact_projectbase ppb
+        LEFT JOIN pms_planprojectbatch pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN pact_base pb on pb.id = ppb.pactid
+        LEFT JOIN PACT_STATUS ps on pb.id = ps.pactid
+        LEFT JOIN pact_projectexpense pe on pe.projectbaseid=ppb.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="selectList" resultType="java.util.Map">
+        SELECT ppb.id,ppb.mainorganizers,ppb.batchname,ppb.belonglab,pe.jhxtzkjjf,ppb.projectleader,pppb.name,pb.pactno,ppb.projectbasename,ppb.projectplantype
+        FROM PACT_PROJECTBASE ppb
+        LEFT JOIN pms_planprojectbatch pppb on ppb.PLANPROJECTBATCHID = pppb.ID
+        LEFT JOIN pact_base pb on pb.ID = ppb.PACTID
+        LEFT JOIN PACT_STATUS ps on pb.id = ps.pactid
+        LEFT JOIN pact_projectexpense pe on pe.PROJECTBASEID=ppb.ID
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        order by dbms_random.value
+    </select>
+
+    <select id="selectProjectAndContract" resultType="java.util.Map">
+        SELECT *
+        from pact_projectbase ppb
+        LEFT JOIN pms_department pdp on pdp.id = ppb.belonglabid
+        LEFT JOIN pms_planprojectbatch pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN pact_base pb on pb.id = ppb.pactid
+        LEFT JOIN pact_enterpriseorganization peg on peg.projectbaseid = ppb.id and peg.ismainenterprise='true'
+        LEFT JOIN pact_projectexpense pe on pe.projectbaseid=ppb.id
+        LEFT JOIN PGZX_CWPG_CONTRACT_BUDGET pccb on ppb.id = pccb.PROJECTID
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="selectProjectByDeclarantId" resultType="java.util.Map">
+        SELECT
+        pc.STATUS,pc.EXTRACT_BATCH, ppb.id,ppb.MAINORGANIZERS,ppb.batchname,ppb.belonglab,pe.jhxtzkjjf,ppb.projectleader,pppb.name,pb.pactno,ppb.projectbasename,ppb.projectplantype
+        FROM PGZX_CWPG_PROJECT_EXTRACT pc
+        LEFT JOIN pact_projectbase ppb on ppb.id = pc.PROJECT_ID
+        LEFT JOIN pms_planprojectbatch pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN pact_base pb on pb.id = ppb.pactid
+        LEFT JOIN pact_projectexpense pe on pe.projectbaseid=ppb.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="selectProject" resultType="java.util.Map">
+        SELECT
+        pc.STATUS,pc.EXTRACT_BATCH,ppb.id,ppb.MAINORGANIZERS,ppb.batchname,ppb.belonglab,pe.jhxtzkjjf,ppb.projectleader,pppb.name,pb.pactno,ppb.projectbasename,ppb.projectplantype,pcc.CONCLUSION_STATUS
+        FROM PGZX_CWPG_PROJECT_EXTRACT pc
+        LEFT JOIN PGZX_CWPG_CONCLUSION pcc on pc.PROJECT_ID = pcc.PROJECT_ID
+        LEFT JOIN pact_projectbase ppb on ppb.id = pcc.PROJECT_ID
+        LEFT JOIN pms_planprojectbatch pppb on ppb.planprojectbatchid = pppb.id
+        LEFT JOIN pact_base pb on pb.id = ppb.pactid
+        LEFT JOIN pact_projectexpense pe on pe.projectbaseid=ppb.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="selectStatus" resultType="java.util.Map">
+        select distinct STATUS from PACT_STATUS
+    </select>
+    <select id="contractByUser" resultType="java.util.Map">
+        select ppb.PACTID,ppb.id,ppb.PROJECTBASENAME,pb.PACTNO,ppb.MAINORGANIZERS
+        from PACT_PROJECTBASE ppb
+        LEFT JOIN PMS_PLANPROJECTBATCH pppb on ppb.PLANPROJECTBATCHID = pppb.ID
+        LEFT JOIN PACT_BASE pb on pb.ID = ppb.PACTID
+        LEFT JOIN PACT_PROJECTEXPENSE ppe on ppe.PROJECTBASEID = ppb.ID
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <select id="selectUser" resultType="java.util.Map">
+        select id,name from SYS_USER where id=#{userId}
+    </select>
+</mapper>

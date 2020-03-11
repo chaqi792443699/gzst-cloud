@@ -1,0 +1,54 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: cloud-gateway
+  profiles: #激活哪一个环境的配置文件
+    active: dev
+  cloud:
+    config:
+      name: application-${spring.application.name}
+      fail-fast: true
+      profile: ${spring.profiles.active}
+      label: config-repo
+      discovery:
+        enabled: true
+        service-id: cloud-config-server
+    bus: #开启消息跟踪
+     trace:
+       enabled: true
+
+---
+spring:
+  profiles: dev
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka
+
+---
+spring:
+  profiles: test
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka
+
+---
+spring:
+  profiles: prd
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://cloud:cloud123456@localhost:1088/eureka

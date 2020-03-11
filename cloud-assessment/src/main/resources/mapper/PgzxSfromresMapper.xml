@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.PgzxSfromresMapper">
+
+
+    <select id="adminFindTodoList" resultType="java.util.Map">
+        SELECT    pb.pactno,ppb.id,ppb.projectbasename, ppb.mainorganizers,ppb.projectleader, ppb.pactid	,pcr.APPROVAL,pcr.APPROVAL_TIME,APPROVAL_OPINION
+             from  pact_base   pb
+             LEFT JOIN pact_projectbase ppb on pb.id = ppb.pactid
+			 LEFT JOIN PGZX_CWPG_PROCESS pcr on  pcr.pactid = pb.id
+             where pcr.APPROVAL_TIME in (select max(APPROVAL_TIME) from PGZX_CWPG_PROCESS group by pactid) and pcr. APPROVAL = '4'
+    </select>
+
+
+    <select id="adminFindDoneList" resultType="java.util.Map">
+
+           SELECT   pb.pactno,ppb.id,ppb.projectbasename, ppb.mainorganizers,ppb.projectleader, ppb.pactid	,pcr.APPROVAL,pcr.APPROVAL_TIME,APPROVAL_OPINION
+             from  pact_base   pb LEFT JOIN pact_projectbase ppb on pb.id = ppb.pactid
+			 LEFT JOIN PGZX_CWPG_PROCESS pcr on  pcr.pactid = pb.id
+             where 	 pcr.APPROVAL_TIME in (select max(APPROVAL_TIME) from PGZX_CWPG_PROCESS group by pactid)
+                  and pcr. APPROVAL = '1' or pcr. APPROVAL = '3'
+
+    </select>
+
+    <select id="findBylistPactno" parameterType="string" resultType="java.util.Map">
+        SELECT    pb.pactno,ppb.id,ppb.projectbasename, ppb.mainorganizers,ppb.projectleader, ppb.pactid	,pcr.APPROVAL,pcr.APPROVAL_TIME,APPROVAL_OPINION
+             from  pact_base   pb LEFT JOIN pact_projectbase ppb on pb.id = ppb.pactid
+						 LEFT JOIN PGZX_CWPG_PROCESS pcr on  pcr.pactid = pb.id
+             where pactno like  CONCAT(CONCAT('%',#{pactno}),'%') and (pcr.approval ='2' or pcr.approval ='3' or pcr.approval ='4' or pcr.approval ='5')
+    </select>
+
+</mapper>

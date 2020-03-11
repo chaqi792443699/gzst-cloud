@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gov.gzst.assessment.mapper.FinanceProjectExtractMapper">
+        <select id="selectProjectByProjectId" resultType="cn.gov.gzst.assessment.entity.FinanceProjectExtract" parameterType="String">
+            select  cw.id, cw.project_id, cw.extract_id, cw.extract_time, cw.status, cw.extract_batch,ppb.PROJECTBASENAME
+            from PGZX_CWPG_PROJECT_EXTRACT cw
+            LEFT JOIN PACT_PROJECTBASE ppb on ppb.id = cw.PROJECT_ID
+            where PROJECT_ID=#{projectId}
+        </select>
+
+    <select id="select" resultType="cn.gov.gzst.assessment.entity.FinanceProjectExtract">
+        select id, project_id, extract_id, extract_time, status, extract_batch
+        from PGZX_CWPG_PROJECT_EXTRACT
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <select id="selectExtractBatch" resultType="cn.gov.gzst.assessment.entity.FinanceProjectExtract">
+       /* select distinct EXTRACT_BATCH
+        from PGZX_CWPG_PROJECT_EXTRACT
+        order by EXTRACT_TIME*/
+
+        select EXTRACT_TIME,EXTRACT_BATCH
+        from (select t1.*,
+               row_number() over(partition by t1.EXTRACT_BATCH order by 1) rn
+                from PGZX_CWPG_PROJECT_EXTRACT t1) t1
+            where t1.rn = 1
+            order by EXTRACT_TIME
+    </select>
+    <select id="selectRecentBatch" resultType="cn.gov.gzst.assessment.entity.FinanceProjectExtract">
+        select DISTINCT EXTRACT_BATCH
+        from PGZX_CWPG_PROJECT_EXTRACT
+        where EXTRACT_TIME = (select max(EXTRACT_TIME) from PGZX_CWPG_PROJECT_EXTRACT)
+    </select>
+
+
+    <update id="updateByProjectId" parameterType="java.util.Map">
+        update PGZX_CWPG_PROJECT_EXTRACT set STATUS = #{status} where PROJECT_ID =#{projectId}
+    </update>
+
+</mapper>
